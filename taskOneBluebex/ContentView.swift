@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+var usersName: String = "Aadish Jain"
+var employeeId: String = "BB000012"
+var userEmail: String = "aadishjain@bluebex.com"
+
+// MARK: - Content View - zIndex
+
 struct ContentView: View {
     @State private var showMenu = false
     @State private var selectedScreen: String? = "Home"
@@ -51,6 +57,8 @@ struct ContentView: View {
     }
 }
 
+// MARK: - Navigation Drawer View
+
 struct TopBarView: View {
     @Binding var showMenu: Bool
 
@@ -85,11 +93,11 @@ struct TopBarView: View {
                         .foregroundColor(Color(.systemBackground)).opacity(0.9)
                 }
                 Spacer()
-                Image(systemName: "person.crop.circle.fill")
+                Image(systemName: "questionmark.circle.dashed")
                     .resizable()
                     .frame(width: 36, height: 36)
                     .foregroundColor(.blue).opacity(0.8)
-                    .background(Circle().fill(Color(.systemBackground)))
+                    
             }
             .padding()
         }
@@ -97,6 +105,8 @@ struct TopBarView: View {
         .background(.ultraThinMaterial)
     }
 }
+
+// MARK: - SideBar View
 
 struct SideMenuView: View {
     @Binding var selectedScreen: String?
@@ -111,13 +121,13 @@ struct SideMenuView: View {
                     .padding(10)
                     .background(Circle().fill(LinearGradient(colors: [.blue, Color(.systemBackground)], startPoint: .topLeading, endPoint: .bottomTrailing)))
                 VStack(alignment: .leading) {
-                    Text("Aadish Jain")
+                    Text(usersName)
                         .font(.headline)
                         .foregroundColor(.primary)
-                    Text("BB000012")
+                    Text(employeeId)
                         .font(.caption)
                         .foregroundColor(.primary)
-                    Text("aadish.bluebex@gmail.com")
+                    Text(userEmail)
                         .font(.caption)
                         .foregroundColor(.primary)
                 }
@@ -148,6 +158,8 @@ struct SideMenuView: View {
     }
 }
 
+// MARK: - HamburgerButton View
+
 struct MenuButton: View {
     var icon: String
     var label: String
@@ -175,28 +187,141 @@ struct MenuButton: View {
     }
 }
 
+// MARK: - HomeView
+
 struct HomeView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "envelope.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 80)
-                .foregroundStyle(.primary)
-            Text("Your Inbox is Empty")
-                .font(.title3)
-                .padding(.top)
-                .foregroundColor(.primary)
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 20) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Hello, \(usersName) 👋")
+                        .font(.title2.bold())
+                        .foregroundColor(.primary)
+                    Text("Here's what's on your plate today.")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.horizontal)
+                .padding(.top, 90)
+                
+                HomeHeaderView(title: "Today")
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 15) { //closure
+                        HomeCardView(title: "Morning Meeting", time: "10:00 AM", color: .blue.opacity(0.8))
+                        HomeCardView(title: "Design Review", time: "11:30 AM", color: .purple.opacity(0.8))
+                        HomeCardView(title: "Code Review", time: "3:00 PM", color: .orange.opacity(0.8))
+                    }
+                    .padding(.horizontal)
+                }
+                    HomeHeaderView(title: "Upcoming")
+                    VStack(spacing: 15) {
+                        HomeRowView(title: "Submit app proposal", date: "Tomorrow", icon: "doc.text", color: .green)
+                        HomeRowView(title: "Submit App Design", date: "Tomorrow", icon: "paintbrush", color: .red)
+                    }
+                    .padding(.horizontal)
+                HomeHeaderView(title: "Completed")
+                VStack(spacing: 15) {
+                    HomeRowView(title: "Nav Enhanced", date: "Today", icon: "checkmark", color: .gray)
+                }
+                .padding(.horizontal)
+                Spacer(minLength: 80)
+            }
         }
-        .padding()
-        .frame(maxWidth: .infinity)
         .background(Color(.systemBackground))
+        .overlay(
+            Button(action: {
+                //button func yaha hoga adding task ka
+            }) {
+                Image(systemName: "plus")
+                    .font(.system(size: 20, weight: .black))
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Circle().fill(Color.blue))
+                    .shadow(radius: 5)
+            }
+                .padding()
+                .padding(.bottom, 20)
+                .offset(y: -40),
+            alignment: .bottomTrailing
+        )
     }
 }
+
+// MARK: - Header - HomeView
+
+struct HomeHeaderView: View {
+    var title: String
+    
+    var body: some View {
+        Text(title)
+            .font(.headline)
+            .padding(.horizontal)
+            .padding(.top, 10)
+    }
+}
+
+// MARK: - CardView for Today Task Section - HomeView
+
+struct HomeCardView: View {
+    var title: String
+    var time: String
+    var color: Color
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.headline)
+                .foregroundColor(.white)
+            Text(time)
+                .font(.caption)
+                .foregroundColor(.white.opacity(0.85))
+        }
+        .padding()
+        .frame(maxWidth: 200, minHeight: 100)
+        .background(color.gradient)
+        .cornerRadius(15)
+        .shadow(color: color.opacity(0.4), radius: 6, x: 0, y: 4)
+    }
+}
+
+// MARK: - RowView For the Upcoming and Completed Cards - HomeView
+
+struct HomeRowView: View {
+    var title: String
+    var date: String
+    var icon: String
+    var color: Color
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .foregroundColor(.white)
+                .padding(10)
+                .background(color)
+                .clipShape(Circle())
+            
+            VStack(alignment: .leading) {
+                Text(title)
+                    .font(.headline)
+                Text(date)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            Spacer()
+        }
+        .padding()
+        .background(Color(.secondarySystemBackground))
+        .cornerRadius(15)
+    }
+}
+
+// MARK: - Screen Names
 
 enum Tab: String, CaseIterable {
     case home, tasks, calendar, profile
 }
+
+// MARK: - Bottom TabBar
 
 struct BottomTabBarView: View {
     @Binding var selectedTab: Tab
@@ -237,6 +362,8 @@ struct BottomTabBarView: View {
     }
 }
 
+// MARK: - Tab Buttons
+
 struct TabBarButton: View {
     var icon: String
     var label: Tab
@@ -259,6 +386,8 @@ struct TabBarButton: View {
         }
     }
 }
+
+// MARK: - Shape of Cutout
 
 struct BottomTabBarShape: Shape {
     var cutoutX: CGFloat
@@ -297,6 +426,7 @@ struct BottomTabBarShape: Shape {
     }
 }
 
+// MARK: - Preview
 
 #Preview {
     ContentView()
