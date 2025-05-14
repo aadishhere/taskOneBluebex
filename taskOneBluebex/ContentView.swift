@@ -21,8 +21,19 @@ struct ContentView: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
             NavigationView {
-                HomeView()
-                    .navigationBarHidden(true)
+                Group {
+                    switch selectedTab {
+                    case .home:
+                        HomeView()
+                    case .tasks:
+                        TaskView()
+                    case .calendar:
+                        CalendarView()
+                    case .profile:
+                        ProfileView()
+                    }
+                }
+                .navigationBarHidden(true)
             }
 
             VStack {
@@ -244,6 +255,54 @@ struct HomeView: View {
                 .offset(y: -40),
             alignment: .bottomTrailing
         )
+    }
+}
+
+// MARK: - TaskView
+
+struct TaskView: View {
+    var body: some View {
+        VStack{
+            Text("Task View")
+                .font(.largeTitle)
+                .foregroundColor(.blue)
+            Spacer()
+        }
+        .padding()
+        .padding(.top, 100)
+        .navigationBarHidden(true)
+    }
+}
+
+// MARK: - CalendarView
+
+struct CalendarView: View {
+    var body: some View {
+        VStack{
+            Text("Calendar View")
+                .font(.largeTitle)
+                .foregroundColor(.blue)
+            Spacer()
+        }
+        .padding()
+        .padding(.top, 100)
+        .navigationBarHidden(true)
+    }
+}
+
+// MARK: - ProfileView
+
+struct ProfileView: View {
+    var body: some View {
+        VStack{
+            Text("Profile View")
+                .font(.largeTitle)
+                .foregroundColor(.blue)
+            Spacer()
+        }
+        .padding()
+        .padding(.top, 100)
+        .navigationBarHidden(true)
     }
 }
 
